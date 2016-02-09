@@ -8,6 +8,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var htmlmin = require('gulp-htmlmin');
+var minifyCss = require('gulp-minify-css');
 
 // Lint Task
 gulp.task('lint', function() {
@@ -34,10 +35,16 @@ gulp.task('scripts', function() {
 });
 
 // Minify HTML
-gulp.task('minify', function() {
+gulp.task('minify-html', function() {
   return gulp.src('src/*.html')
     .pipe(htmlmin({collapseWhitespace: true, removeComments:true}))
     .pipe(gulp.dest('dist'))
+});
+
+gulp.task('minify-css', function() {
+  return gulp.src('src/css/*.css')
+    .pipe(minifyCss({compatibility: 'ie8'}))
+    .pipe(gulp.dest('dist/css'));
 });
 
 // Watch Files For Changes
@@ -47,4 +54,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts', 'minify', 'watch']);
+gulp.task('default', ['lint', 'sass', 'scripts', 'minify-html', 'minify-css', 'watch']);
