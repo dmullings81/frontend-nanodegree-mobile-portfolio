@@ -9,42 +9,59 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var htmlmin = require('gulp-htmlmin');
 var minifyCss = require('gulp-minify-css');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
+/*var gzip = require('gulp-gzip');*/
 
 // Lint Task
 gulp.task('lint', function() {
-    return gulp.src('src/js/*.js')
+    return gulp.src('./src/js/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
 // Compile Our Sass
 gulp.task('sass', function() {
-    return gulp.src('src/scss/*.scss')
+    return gulp.src('./src/scss/*.scss')
         .pipe(sass())
         .pipe(gulp.dest('css'));
 });
 
-// Concatenate & Minify JS
+// Concatenate, Minify & Zip JS
 gulp.task('scripts', function() {
-    return gulp.src('src/js/*.js')
+    return gulp.src('./src/js/*.js')
         .pipe(concat('all.js'))
         .pipe(gulp.dest('dist/js'))
         .pipe(rename('all.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('dist/js'));
+        /*.pipe(gzip())*/
+        .pipe(gulp.dest('./dist/js'));
 });
 
-// Minify HTML
-gulp.task('minify-html', function() {
-  return gulp.src('src/*.html')
+// Minify & Zip HTML
+gulp.task('html', function() {
+  return gulp.src('./src/*.html')
     .pipe(htmlmin({collapseWhitespace: true, removeComments:true}))
+    /*.pipe(gzip())*/
     .pipe(gulp.dest('dist'))
 });
 
-gulp.task('minify-css', function() {
-  return gulp.src('src/css/*.css')
+// Minify & Zip CSS
+gulp.task('styles', function() {
+  return gulp.src('./src/css/*.css')
     .pipe(minifyCss({compatibility: 'ie8'}))
+    /*.pipe(gzip())*/
     .pipe(gulp.dest('dist/css'));
+});
+
+//Minify images
+gulp.task('images', function () {
+    return gulp.src('src/img/*')
+        .pipe(imagemin({
+            progressive: true,
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest('dist/img'));
 });
 
 // Watch Files For Changes
@@ -54,4 +71,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts', 'minify-html', 'minify-css', 'watch']);
+gulp.task('default', ['lint', 'sass', 'scripts', 'html', 'styles', 'images', 'watch']);
