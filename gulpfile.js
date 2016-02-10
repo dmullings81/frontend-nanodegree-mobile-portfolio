@@ -12,6 +12,7 @@ var minifyCss = require('gulp-minify-css');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 /*var gzip = require('gulp-gzip');*/
+var inlineCss = require('gulp-inline-css');
 
 // Lint Task
 gulp.task('lint', function() {
@@ -41,6 +42,7 @@ gulp.task('scripts', function() {
 // Minify & Zip HTML
 gulp.task('html', function() {
   return gulp.src('./src/*.html')
+    .pipe(inlineCss())
     .pipe(htmlmin({collapseWhitespace: true, removeComments:true}))
     /*.pipe(gzip())*/
     .pipe(gulp.dest('dist'))
@@ -56,13 +58,20 @@ gulp.task('styles', function() {
 
 //Minify images
 gulp.task('images', function () {
-    return gulp.src('src/img/*')
+    return gulp.src('./src/img/*')
         .pipe(imagemin({
             progressive: true,
             use: [pngquant()]
         }))
         .pipe(gulp.dest('dist/img'));
 });
+
+//Inline CSS
+/*gulp.task('inline-CSS', function() {
+    return gulp.src('./src/.html')
+        .pipe(inlineCss())
+        .pipe(gulp.dest('dist/'));
+});*/
 
 // Watch Files For Changes
 gulp.task('watch', function() {
