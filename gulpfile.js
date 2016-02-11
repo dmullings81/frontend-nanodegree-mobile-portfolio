@@ -39,7 +39,7 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('./dist/js'));
 });
 
-// Minify & Zip HTML
+// Minify inline CSS & Zip HTML
 gulp.task('html', function() {
   return gulp.src('./src/*.html')
     .pipe(inlineCss())
@@ -66,12 +66,17 @@ gulp.task('images', function () {
         .pipe(gulp.dest('dist/img'));
 });
 
-//Inline CSS
-/*gulp.task('inline-CSS', function() {
-    return gulp.src('./src/.html')
-        .pipe(inlineCss())
-        .pipe(gulp.dest('dist/'));
-});*/
+//Minify the images in the pizza directories
+// TODO: figure out how to get a task to work with multiples sources and destinations
+// TODO: look for gulp task for responsive images
+gulp.task('pizza-images', function () {
+    return gulp.src('./src/views/images/*')
+        .pipe(imagemin({
+            progressive: true,
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest('dist/views/images'));
+});
 
 // Watch Files For Changes
 gulp.task('watch', function() {
