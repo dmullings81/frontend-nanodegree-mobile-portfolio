@@ -66,10 +66,38 @@ gulp.task('images', function () {
         .pipe(gulp.dest('dist/img'));
 });
 
-//Minify the images in the pizza directories
+// Concatenate, Minify & Zip JS in views folder
 // TODO: figure out how to get a task to work with multiples sources and destinations
+gulp.task('scripts-views', function() {
+    return gulp.src('./src/views/js/*.js')
+        .pipe(concat('all.js'))
+        .pipe(gulp.dest('dist/views/js'))
+        .pipe(rename('all.min.js'))
+        .pipe(uglify())
+        /*.pipe(gzip())*/
+        .pipe(gulp.dest('./dist/views/js'));
+});
+
+// Minify inline CSS & Zip HTML in views folder
+gulp.task('html-views', function() {
+  return gulp.src('./src/views/*.html')
+    /*.pipe(inlineCss())*/
+    .pipe(htmlmin({collapseWhitespace: true, removeComments:true}))
+    /*.pipe(gzip())*/
+    .pipe(gulp.dest('dist/views'))
+});
+
+// Minify & Zip CSS in views folder
+gulp.task('styles-views', function() {
+  return gulp.src('./src/views/css/*.css')
+    .pipe(minifyCss({compatibility: 'ie8'}))
+    /*.pipe(gzip())*/
+    .pipe(gulp.dest('dist/views/css'));
+});
+
+//Minify the images in views folder
 // TODO: look for gulp task for responsive images
-gulp.task('pizza-images', function () {
+gulp.task('images-views', function () {
     return gulp.src('./src/views/images/*')
         .pipe(imagemin({
             progressive: true,
@@ -82,7 +110,12 @@ gulp.task('pizza-images', function () {
 gulp.task('watch', function() {
     gulp.watch('src/js/*.js', ['lint', 'scripts']);
     gulp.watch('src/scss/*.scss', ['sass']);
+    gulp.watch('src/*.html', ['html']);
+    gulp.watch('src/css/*.css', ['styles']);
+    gulp.watch('src/views/js/*.js', ['scripts-views']);
+    gulp.watch('src/views/*.html', ['html-views']);
+    gulp.watch('src/views/css/*.css', ['styles-views']);
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts', 'html', 'styles', 'images', 'watch']);
+gulp.task('default', ['lint', 'sass', 'scripts', 'html', 'styles', 'images', 'scripts-views', 'html-views', 'styles-views', 'images-views','watch']);
