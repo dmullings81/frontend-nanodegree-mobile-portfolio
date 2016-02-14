@@ -70,10 +70,10 @@ gulp.task('images', function () {
 // TODO: figure out how to get a task to work with multiples sources and destinations
 gulp.task('scripts-views', function() {
     return gulp.src('./src/views/js/*.js')
-        .pipe(concat('all.js'))
+        /*.pipe(concat('all.js'))
         .pipe(gulp.dest('dist/views/js'))
         .pipe(rename('all.min.js'))
-        .pipe(uglify())
+        .pipe(uglify())*/
         /*.pipe(gzip())*/
         .pipe(gulp.dest('./dist/views/js'));
 });
