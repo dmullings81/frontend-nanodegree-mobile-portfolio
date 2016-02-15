@@ -504,11 +504,12 @@ function updatePositions() {
   //querySelectorAll('.mover'); is not as efficient as getElementsByClassName('mover');
   var items = document.getElementsByClassName('mover');
 
-  //store variable to use in for loop
+  //store variables to use in for loop
   var fromTop = document.body.scrollTop / 1250;
   var phaseArray = [];
 
   //create array of values to use for the phase value inside following for loop
+  //much more efficient than calculating for each iteration
   for (i = 0; i < 5; i++) {
     phaseArray.push(Math.sin((fromTop) + i));
   }
@@ -537,17 +538,21 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  var halfWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width) / 2;
+  var halfWidth = window.innerWidth / 2;
 
-  //reduced number of pizzas created from 200 to 40
+  //reduced number of pizzas created from 200 to 25
   //TODO: Test whether this number is sufficient for larger screens
   //perhaps use a media query for screen size.
-  for (var i = 0; i < 40; i++) {
+  for (var i = 0; i < 25; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
+    elem.style.backfaceVisibility = 'hidden';
+    //The following two transforms were also options
+    //elem.style.transform = 'translateZ(0)';
+    //elem.style.transform = "translate3d(0,0,0)";
     elem.basicLeft = ((i % cols) * s) - halfWidth;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
