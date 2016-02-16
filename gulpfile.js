@@ -39,7 +39,7 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('./dist/js'));
 });
 
-// Minify inline CSS & Zip HTML
+// Minify, inline CSS & Zip HTML
 gulp.task('html', function() {
   return gulp.src('./src/*.html')
     .pipe(inlineCss())
