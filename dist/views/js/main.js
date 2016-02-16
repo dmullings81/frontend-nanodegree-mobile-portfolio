@@ -483,6 +483,9 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
+//variable to ensure requestAnimationFrame only runs when scroll event is fired
+var running = false;
+
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
@@ -517,13 +520,21 @@ function updatePositions() {
   if (frame % 10 === 0) {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
-  }
 
+  }
+running = false;
 
 }
 
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+//window.addEventListener('scroll', updatePositions);
+//added function to trigger requestAnimationFrame on updatePostions on scroll
+window.addEventListener('scroll', function() {
+  if (!running) {
+    running = true;
+    window.requestAnimationFrame(updatePositions);
+  }
+});
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {

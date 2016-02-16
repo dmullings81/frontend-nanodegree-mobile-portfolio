@@ -50,6 +50,11 @@ Runs all of the above.
 *Removed from the for loop the calculation to find scrollTop divided by 1250, and an array of values for use in the phase calculation.
 *Replaced the CSS style 'left' which triggers layout, paint and composite, with transform, which only triggers composite. Found on csstriggers.com. The syntax for this can be attributed to Udacity user 'mcs' here https://gist.github.com/anonymous/dbddbb3cbe8ff64dffd3.
 
+#### requestAnimationFrame
+
+*Used requestAnimationFrame to run the updatePositions function at a steady rate.
+*Added a running variable to ensure requestAnimationFrame did not run after scrolling was completed.
+
 ### resizePizzas function
 
 *Instead of calculating the size difference when resizing, I used the switch statement to return a percentage based on the size value.
