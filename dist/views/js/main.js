@@ -421,21 +421,21 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-   // Returns the size as percentage. Called by changePizzaSizes(size).
-   //A lot more efficient than calculating the difference.
-    function sizeSwitcher (size) {
-      switch(size) {
-        case "1":
-          return 25;
-        case "2":
-          return 33.33;
-        case "3":
-          return 50;
-        default:
-          console.log("bug in sizeSwitcher");
+  // Returns the size as percentage. Called by changePizzaSizes(size).
+  //A lot more efficient than calculating the difference.
+  function sizeSwitcher (size) {
+    switch(size) {
+      case "1":
+        return 25;
+      case "2":
+        return 33.33;
+      case "3":
+        return 50;
+      default:
+        console.log("bug in sizeSwitcher");
       }
     }
-    //calculate size outside of for loop for efficiency
+  //calculate size outside of for loop for efficiency
   newSize = sizeSwitcher(size);
 
   // Iterates through pizza elements on the page and changes their widths
@@ -493,14 +493,17 @@ var running = false;
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
+
   //querySelectorAll('.mover'); is not as efficient as getElementsByClassName('mover');
   var items = document.getElementsByClassName('mover');
 
   //store variables to use in for loop
   var fromTop = document.body.scrollTop / 1250;
   var phaseArray = [];
+
   //cache this variable outside of for loop - attribution http://www.html5rocks.com/en/tutorials/speed/html5/
   var itemsLength = items.length;
+
   //create array of values to use for the phase value inside following for loop
   //much more efficient than calculating for each iteration
   for (i = 0; i < 5; i++) {
@@ -510,6 +513,7 @@ function updatePositions() {
   for (var i = 0; i < itemsLength; i++) {
     //calculated phase variable outside of for loop for efficiency
     var phase = phaseArray[i % 5];
+
     //instead of left, used transform which only triggers compositing
     items[i].style.transform = 'translateX('+(items[i].basicLeft + /*100 * */phase) + 'px)';
   }
@@ -521,11 +525,10 @@ function updatePositions() {
   if (frame % 10 === 0) {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
-
   }
-  //return running state to false as updatePositions has finished
-running = false;
 
+  //return running state to false as updatePositions has finished
+  running = false;
 }
 
 // runs updatePositions on scroll
@@ -544,20 +547,22 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var halfWidth = window.innerWidth / 2;
+  var pizzas = 25;
 
   //reduced number of pizzas created from 200 to 25
   //TODO: Test whether this number is sufficient for larger screens
   //perhaps use a media query for screen size.
-  for (var i = 0; i < 25; i++) {
+  for (var i = 0; i < pizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
+    // TODO: add vendor prefixes
     elem.style.backfaceVisibility = 'hidden';
     //The following two transforms were also options
-    //elem.style.transform = 'translateZ(0)';
-    //elem.style.transform = "translate3d(0,0,0)";
+    elem.style.transform = 'translateZ(0)';
+    elem.style.transform = "translate3d(0,0,0)";
     elem.basicLeft = ((i % cols) * s) - halfWidth;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);

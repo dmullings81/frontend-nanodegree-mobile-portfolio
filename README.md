@@ -38,7 +38,7 @@ Runs all of the above.
 
 ## Pizza page optimizations
 
-Now running at a steady 60fps!
+Now running at a steady 60fps! Resize the pizzas using the slider now takes about 1ms!
 
 ### 'Movers' elements
 
@@ -50,7 +50,8 @@ Now running at a steady 60fps!
 
 * Replaced querySelectorAll with getElementsByClassName which is considerably faster.
 * Removed from the for loop the calculation to find scrollTop divided by 1250, and an array of values for use in the phase calculation.
-* Replaced the CSS style 'left' which triggers layout, paint and composite, with transform, which only triggers composite. Found on csstriggers.com. The syntax for this can be attributed to Udacity user 'mcs' here https://discussions.udacity.com/t/project-4-how-do-i-optimize-the-background-pizzas-for-loop/36302.
+* Stored the variable items.length outisde of the loop (attribute to http://www.html5rocks.com/en/tutorials/speed/html5/)
+* Replaced the CSS style 'left' which triggers layout, paint and composite, with transform, which only triggers composite. Found on csstriggers.com. The syntax for this can be attributed to Udacity user 'mcs' (https://discussions.udacity.com/t/project-4-how-do-i-optimize-the-background-pizzas-for-loop/36302).
 
 #### requestAnimationFrame
 
