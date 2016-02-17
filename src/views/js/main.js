@@ -499,18 +499,19 @@ function updatePositions() {
   //store variables to use in for loop
   var fromTop = document.body.scrollTop / 1250;
   var phaseArray = [];
-
+  //cache this variable outside of for loop - attribution http://www.html5rocks.com/en/tutorials/speed/html5/
+  var itemsLength = items.length;
   //create array of values to use for the phase value inside following for loop
   //much more efficient than calculating for each iteration
   for (i = 0; i < 5; i++) {
-    phaseArray.push(Math.sin((fromTop) + i));
+    phaseArray.push((Math.sin(fromTop + i)) * 100);
   }
 
-  for (var i = 0; i < items.length; i++) {
+  for (var i = 0; i < itemsLength; i++) {
     //calculated phase variable outside of for loop for efficiency
     var phase = phaseArray[i % 5];
     //instead of left, used transform which only triggers compositing
-    items[i].style.transform = 'translateX('+(items[i].basicLeft + 100 * phase) + 'px)';
+    items[i].style.transform = 'translateX('+(items[i].basicLeft + /*100 * */phase) + 'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -522,6 +523,7 @@ function updatePositions() {
     logAverageFrame(timesToUpdatePosition);
 
   }
+  //return running state to false as updatePositions has finished
 running = false;
 
 }
@@ -529,12 +531,13 @@ running = false;
 // runs updatePositions on scroll
 //window.addEventListener('scroll', updatePositions);
 //added function to trigger requestAnimationFrame on updatePostions on scroll
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', isRunning);
+  function isRunning() {
   if (!running) {
     running = true;
     window.requestAnimationFrame(updatePositions);
   }
-});
+};
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {

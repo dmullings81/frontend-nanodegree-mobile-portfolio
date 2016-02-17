@@ -1,47 +1,65 @@
-Website Performance Optimization portfolio project
-==================================================
+# Website Performance Optimization portfolio project
 
-## Synopsis
+The fourth project in the Udacity Front End Web Developer nanodegree program was to optimize a portfolio website. The first part required us to optimize the PageSpeed Insights score for index.html to 90 or higher. The second required us to optimize the pizza.html to run at a consisten 60fps, and have the pizzas resize at under 10ms.
 
-This is my fourth project in the Udacity frontend nanodegree program, which
-focuses on web optimization.  You can view the final project
-[here](http://tneisinger.github.io/frontend-nanodegree-mobile-portfolio).
+## Usage
 
-The source code for this project can be found in src/ while the optimized code
-is saved in the dist/ directory.
+To run the site open the file index.html. Some animations use JavaScript so make sure JavaScript is enabled in your browser. PageSpeed Insights score of 96 on mobile and 97 on desktop! Only remaining fixes are server-side.
 
-## Setup
+## Gulp usage
 
-The final project can be seen
-[here](http://tneisinger.github.io/frontend-nanodegree-mobile-portfolio).  If
-you would like to install and run this project on your local machine, clone
-this repo and open the dist/index.html file in your favorite web browser.
+The task runner Gulp has been used to optimize the site.
 
-All source code for this project is located in the src/ directory.  This
-project uses npm and grunt to minify images and source code and place them into
-the dist/ directory.  If you wish to modify the source code, it is recommended
-that you use grunt to re-minify the source code and save it into the dist/
-directory.
+Type the following commands into your command line in the root directory (where gulpfile.js is located). All working files are located in the 'src' directory, and running gulp tasks will output to the 'dist' directory.
 
-## Optimizations of views/js/main.js
+gulp sass
+Compiles any sass files into css files.
 
-Two main features were addressed in optimizing the pizza.html page:
+gulp scripts
+Concatenates & minifies JavaScript files into all.js and all.min.js. Gzip functionality currently commented out.
 
-1. The animation of the background pizzas when the page is scrolled
-2. The resizing of the foreground pizzas when the input slider is adjusted.
+gulp html
+Minifies and inlines any associated CSS files. Gzip functionality currently commented out.
 
-To improve the scrolling animation of the background pizzas, I performed the
-following optimizations:
+gulp styles
+Minifies CSS files. Gzip functionality currently commented out.
 
-- Remove superfluous pizzas from the background. (Reduced from 200 to 50)
-- Move animating javascript into a requestAnimationFrame function.
-- Move calculations and element selections out of for-loops where possible.
-- Use getElementsByClassName instead of querySelectorAll.
-- Use transform for animation rather than left, right, top, or bottom.
-- Store all the moving pizzas in a global variable to avoid repeated lookups.
+gulp images
+Minifies images.
 
-To improve the responsiveness of the resizable foreground pizzas, I performed
-the following optimizations:
+gulp scripts-views, gulp html-views, gulp styles-views, gulp images-views
+Run the same tasks as above but in the views directory. Necessary to keep directory structure for reviewers.
 
-- Modify changePizzaSizes function to prevent forced synchronous layouts.
-- Simplify the changePizzaSizes function, removing extra calculations.
+gulp watch
+Watches for changes in any of the above files and runs associated tasks.
+
+gulp
+Runs all of the above.
+
+## Pizza page optimizations
+
+Now running at a steady 60fps!
+
+### 'Movers' elements
+
+* Reduced number of mover elements created from 200 to 25.
+* Added the backface-visibility: hidden CSS attribute to force them into seperate composite layers. This meant that the browser wasn't required to paint the whole page each time the element moved.
+* Subtracted half the window width from the basicLeft variable for use in the updatePositions function.
+
+### updatePositions function
+
+* Replaced querySelectorAll with getElementsByClassName which is considerably faster.
+* Removed from the for loop the calculation to find scrollTop divided by 1250, and an array of values for use in the phase calculation.
+* Replaced the CSS style 'left' which triggers layout, paint and composite, with transform, which only triggers composite. Found on csstriggers.com. The syntax for this can be attributed to Udacity user 'mcs' here https://discussions.udacity.com/t/project-4-how-do-i-optimize-the-background-pizzas-for-loop/36302.
+
+#### requestAnimationFrame
+
+* Used requestAnimationFrame to run the updatePositions function at a steady rate.
+* Added a running variable to ensure requestAnimationFrame did not run after scrolling was completed.
+(attribute to https://www.kirupa.com/html5/animating_with_requestAnimationFrame.htm)
+
+### resizePizzas function
+
+* Instead of calculating the size difference when resizing, I used the switch statement to return a percentage based on the size value.
+* Said percentage was then used in the changePizzaSizes function as the width attribute of the pizza containers.
+* Replaced querySelectorAll with getElementsByClassName which is considerably faster.

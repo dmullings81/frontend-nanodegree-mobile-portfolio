@@ -4,7 +4,7 @@ The fourth project in the Udacity Front End Web Developer nanodegree program was
 
 ## Usage
 
-To run the site open the file index.html. Some animations use JavaScript so make sure JavaScript is enabled in your browser.
+To run the site open the file index.html. Some animations use JavaScript so make sure JavaScript is enabled in your browser. PageSpeed Insights score of 96 on mobile and 97 on desktop! Only remaining fixes are server-side.
 
 ## Gulp usage
 
@@ -38,6 +38,8 @@ Runs all of the above.
 
 ## Pizza page optimizations
 
+Now running at a steady 60fps!
+
 ### 'Movers' elements
 
 *Reduced number of mover elements created from 200 to 25.
@@ -48,12 +50,13 @@ Runs all of the above.
 
 *Replaced querySelectorAll with getElementsByClassName which is considerably faster.
 *Removed from the for loop the calculation to find scrollTop divided by 1250, and an array of values for use in the phase calculation.
-*Replaced the CSS style 'left' which triggers layout, paint and composite, with transform, which only triggers composite. Found on csstriggers.com. The syntax for this can be attributed to Udacity user 'mcs' here https://gist.github.com/anonymous/dbddbb3cbe8ff64dffd3.
+*Replaced the CSS style 'left' which triggers layout, paint and composite, with transform, which only triggers composite. Found on csstriggers.com. The syntax for this can be attributed to Udacity user 'mcs' here https://discussions.udacity.com/t/project-4-how-do-i-optimize-the-background-pizzas-for-loop/36302.
 
 #### requestAnimationFrame
 
 *Used requestAnimationFrame to run the updatePositions function at a steady rate.
 *Added a running variable to ensure requestAnimationFrame did not run after scrolling was completed.
+(attribute to https://www.kirupa.com/html5/animating_with_requestAnimationFrame.htm)
 
 ### resizePizzas function
 
